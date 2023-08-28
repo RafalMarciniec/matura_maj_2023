@@ -4,7 +4,6 @@ import numpy as numpy
 
 path_to_file = r"data\pi.txt"
 
-
 # path_to_file = r"data\pi_przyklad.txt"
 
 
@@ -36,44 +35,50 @@ def zad_3_2():
 
 
 def get_left_boundary(peak_index, digits):
-    if peak_index - 1 == 0:
-        return 0
-    if digits[peak_index] > digits[peak_index - 1]:
-        return get_left_boundary(peak_index=peak_index - 1, digits=digits)
-    return peak_index
+    pass
 
 
 def get_right_boundary(peak_index, digits):
-    if peak_index + 1 == len(digits) - 1:
-        return peak_index + 1
-    if digits[peak_index] > digits[peak_index + 1]:
-        return get_right_boundary(peak_index=peak_index + 1, digits=digits)
-    return peak_index + 1
+    pass
 
 
-def i_have_no_idea_how_to_name_that_function(peak_index, is_upland, digits):
-    right_peak = peak_index
-    if is_upland:
-        right_peak += 1
-    return digits[get_left_boundary(peak_index=peak_index, digits=digits): get_right_boundary(peak_index=right_peak,
-                                                                                              digits=digits)]
+def get_end_index(main_idx, digits, is_increasing=True, is_first_recursion=False):
+    if len(digits) - 1 == main_idx:
+        return main_idx +1
+    if is_first_recursion:
+        if digits[main_idx] >= digits[main_idx + 1]:
+            return
+        return get_end_index(main_idx=main_idx + 1, digits=digits)
+    if is_increasing:
+        if digits[main_idx] < digits[main_idx + 1]:
+            return get_end_index(main_idx=main_idx + 1, digits=digits)
+        else:
+            return get_end_index(main_idx=main_idx + 1, digits=digits, is_increasing=False)
+    else:
+        if digits[main_idx] <= digits[main_idx + 1]:
+            return main_idx + 1
+        else:
+            return get_end_index(main_idx=main_idx + 1, digits=digits, is_increasing=False)
+
 
 
 def zad_3_3():
+    # digits = sanitize_input(True)[9390:9398]
     digits = sanitize_input(True)
     all_sequences = {}
     for main_idx in range(len(digits) - 2):
-        if digits[main_idx] == digits[main_idx + 1]:
-            result = i_have_no_idea_how_to_name_that_function(peak_index=main_idx, is_upland=True,
-                                                                               digits=digits)
-            # if len(result)<3:
-                # continue
-            all_sequences[main_idx] = result
-        if digits[main_idx] > digits[main_idx + 1] and digits[main_idx - 1] < digits[main_idx]:
-            all_sequences[main_idx] = i_have_no_idea_how_to_name_that_function(peak_index=main_idx, is_upland=False,
-                                                                               digits=digits)
-    len_6 = list(filter(lambda val: len(val)>=6, all_sequences.values()))
-    print(len(len_6))
+        if main_idx==198:
+            a  = 1
+        end_index = get_end_index(main_idx=main_idx, digits=digits, is_first_recursion=True)
+        end_index2 = get_end_index_2(main_idx=main_idx, digits=digits, is_first_recursion=True)
+        if end_index2!=end_index2:
+            print(f"main index {main_idx} list {digits[main_idx: end_index]} end idx {end_index} end idx 2 {end_index2}")
+        if end_index:
+            all_sequences[main_idx] = digits[main_idx: end_index]
+            a = 1
+    max_6 = list(filter(lambda x: len(x)>=6, all_sequences.values()))
+    max_6_2 = list(filter(lambda x: len(x[1]) >= 6, all_sequences.items()))
+    print(len(max_6))
 
 if __name__ == '__main__':
     zad_3_3()
